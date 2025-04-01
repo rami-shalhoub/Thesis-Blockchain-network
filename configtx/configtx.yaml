@@ -1,0 +1,244 @@
+################################################################################
+#
+#?  Section: Organizations
+#
+#   - This section defines the different organizational identities
+#
+################################################################################
+Organizations:
+  - &OrdererOrg
+      Name: OrdererOrg
+      ID: OrdererMSP
+      MSPDir: ../orgCrypto/ordererOrganizations/example.com/msp
+      Policies:
+        Readers:
+          Type: Signature
+          Rule: "OR('OrdererMSP.member')"
+        Writers:
+          Type: Signature
+          Rule: "OR('OrdererMSP.member')"
+        Admins:
+          Type: Signature
+          Rule: "OR('OrdererMSP.admin')"
+      OrdererEndpoints:
+        - orderer.example.com:6000
+
+  - &ClientOrg
+      Name: ClientOrgMSP
+      ID: ClientOrgMSP
+      MSPDir: ../orgCrypto/peerOrganizations/client.example.com/msp
+      Policies:
+        Readers:
+          Type: Signature
+          Rule: "OR('ClientOrgMSP.admin', 'ClientOrgMSP.peer', 'ClientOrgMSP.client')"
+        Writers:
+          Type: Signature
+          Rule: "OR('ClientOrgMSP.admin', 'ClientOrgMSP.client')"
+        Admins:
+          Type: Signature
+          Rule: "OR('ClientOrgMSP.admin')"
+        Endorsement:
+          Type: Signature
+          Rule: "OR('ClientOrgMSP.peer')"
+      AnchorPeers:
+        - Host: anchor.client.example.com
+          Port: 7000
+
+  - &LawFirmOrg
+      Name: LawFirmOrg
+      ID: LawFirmMSP
+      MSPDir: ../orgCrypto/peerOrganizations/lawfirm.example.com/msp
+      Policies:
+        Readers:
+          Type: Signature
+          Rule: "OR('LawFirmMSP.admin', 'LawFirmMSP.peer', 'LawFirmMSP.client')"
+        Writers:
+          Type: Signature
+          Rule: "OR('LawFirmMSP.admin', 'LawFirmMSP.client')"
+        Admins:
+          Type: Signature
+          Rule: "OR('LawFirmMSP.admin')"
+        Endorsement:
+          Type: Signature
+          Rule: "OR('LawFirmMSP.peer')"
+      AnchorPeers:
+        - Host: anchor.lawfirm.example.com
+          Port: 8000
+
+  - &RetailOrg
+      Name: RetailOrgMSP
+      ID: RetailOrgMSP
+      MSPDir: ../orgCrypto/peerOrganizations/retail.example.com/msp
+      Policies:
+        Readers:
+          Type: Signature
+          Rule: "OR('RetailOrgMSP.admin', 'RetailOrgMSP.peer', 'RetailOrgMSP.client')"
+        Writers:
+          Type: Signature
+          Rule: "OR('RetailOrgMSP.admin', 'RetailOrgMSP.client')"
+        Admins:
+          Type: Signature
+          Rule: "OR('RetailOrgMSP.admin')"
+        Endorsement:
+          Type: Signature
+          Rule: "OR('RetailOrgMSP.peer')"
+      AnchorPeers:
+        - Host: anchor.retail.example.com
+          Port: 9000
+################################################################################
+#
+#?  SECTION: Capabilities
+#
+#   - This section defines the capabilities of fabric network.
+#
+################################################################################
+Capabilities:
+  Channel: &ChannelCapabilities
+    V2_0: true
+
+  Orderer: &OrdererCapabilities
+    V2_0: true
+
+  Application: &ApplicationCapabilities
+    V2_5: true
+################################################################################
+#
+#   SECTION: Application
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for application related parameters
+#
+################################################################################
+Application: &ApplicationDefaults
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+  Capabilities:
+    <<: *ApplicationCapabilities
+################################################################################
+#
+#?  SECTION: Orderer
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for orderer related parameters
+#
+################################################################################
+Orderer: &OrdererDefaults
+  OrdererType: etcdraft
+  Addresses:
+    - orderer.example.com:6000
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10	
+    AbsoluteMaxBytes: 99 MB	
+    PreferredMaxBytes: 512 KB
+  Organizations:
+  Policies:	
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+################################################################################
+#
+#?  CHANNEL
+#
+#   This section defines the values to encode into a config transaction or
+#   genesis block for channel related parameters.
+#
+################################################################################
+Channel: &ChannelDefaults>
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+  Capabilities:
+    <<: *ChannelCapabilities
+################################################################################
+#
+#?  Profile
+#
+#   - Different configuration profiles may be encoded here to be specified
+#   as parameters to the configtxgen tool
+#
+################################################################################
+#TODO create a proper profile 
+Profiles:
+  ChannelUsingRaft:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      OrdererType: etcdraft
+      EtcdRaft:
+        Consenters:
+          - Host: orderer.example.com
+            Port: 6000
+            ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+            ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+      Organizations:
+        - *OrdererOrg
+      Capabilities: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org1
+        - *Org2
+      Capabilities: *ApplicationCapabilities
+      
+  OrdererGenesis:
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+    Consortiums:
+      LawFirmClientConsortium:
+        Organizations:
+          - *LawFirmOrg
+          - *ClientOrg
+      RetailClientConsortium:
+        Organizations:
+          - *RetailOrg
+          - *ClientOrg
+
+  LawFirmClientChannel:
+    Consortium: LawFirmClientConsortium
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *LawFirmOrg
+        - *ClientOrg
+
+  RetailClientChannel:
+    Consortium: RetailClientConsortium
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *RetailOrg
+        - *ClientOrg

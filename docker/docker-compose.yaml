@@ -1,0 +1,110 @@
+services:
+################################################################################
+#
+#?  Client containers
+#
+################################################################################
+  anchor.client.example.com: 
+    container_name: anchor.client.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_thesis
+    volumes:
+      - ./docker/peercfg:/etc/hyperledger/peercfg
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock
+
+  backup.client.example.com:
+    container_name: backup.client.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_test
+      # - CORE_PEER_ID=peer1.client.example.com
+      # - CORE_PEER_ADDRESS=peer1.client.example.com:12051
+      # - CORE_PEER_LOCALMSPID=ClientOrgMSP
+    volumes:
+      - ./docker/peercfg:/etc/hyperledger/peercfg
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock
+    # ports:
+    #   - 12051:12051
+################################################################################
+#
+#?  Law Firm containers
+#
+################################################################################
+  anchor.lawfirm.example.com:
+    container_name: anchor.lawfirm.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_test
+      # - CORE_PEER_ID=peer0.lawfirm.example.com
+      # - CORE_PEER_ADDRESS=peer0.lawfirm.example.com:7051
+      # - CORE_PEER_LOCALMSPID=LawFirmOrgMSP
+    volumes:
+      - ./docker/peercfg:/etc/hyperledger/peercfg
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock 
+    # ports:
+    #   - 7051:7051
+
+  backup.lawfirm.example.com:
+    container_name: backup.lawfirm.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_test
+      # - CORE_PEER_ID=peer1.lawfirm.example.com
+      # - CORE_PEER_ADDRESS=peer1.lawfirm.example.com:8051
+      # - CORE_PEER_LOCALMSPID=LawFirmOrgMSP
+    volumes:
+      - ./docker/peercfg:/etc/hyperledger/peercfg
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock 
+    # ports:
+    #   - 8051:8051
+################################################################################
+#
+#?  Retail containers
+#
+################################################################################
+  anchor.retail.example.com:
+    container_name: anchor.retail.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_test
+      # - CORE_PEER_ID=peer0.retail.example.com
+      # - CORE_PEER_ADDRESS=peer0.retail.example.com:9051
+      # - CORE_PEER_LOCALMSPID=RetailOrgMSP
+    volumes:
+      - ./docker/peercfg:/etc/hyperledger/peercfg
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock 
+    # ports:
+    #   - 9051:9051
+
+  backup.retail.example.com:
+    container_name: backup.retail.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_test
+      # - CORE_PEER_ID=peer1.retail.example.com
+      # - CORE_PEER_ADDRESS=peer1.retail.example.com:10051
+      # - CORE_PEER_LOCALMSPID=RetailOrgMSP
+    volumes:
+      - ./docker/peercfg:/etc/hyperledger/peercfg
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock 
+    # ports:
+    #   - 10051:10051

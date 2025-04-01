@@ -1,0 +1,295 @@
+################################################################################
+#
+#?  Volumes
+#
+################################################################################
+volumes:
+  orderer.example.com:
+
+  anchor.client.example.com:
+  backup.client.example.com:
+
+  anchor.lawfirm.example.com:
+  backup.lawfirm.example.com:
+
+  anchor.retail.example.com:
+  backup.retail.example.com:
+################################################################################
+#
+#?  Networks
+#
+################################################################################
+networks:
+  thesis:
+    name: fabric_thesis
+################################################################################
+#
+#?  Services
+#
+################################################################################
+services:
+#~###########Orderer Container###########
+  orderer.example.com:
+    container_name: orderer.example.com
+    image: hyperledger/fabric-orderer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=6000
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=none
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+      - ORDERER_ADMIN_TLS_ENABLED=true
+      - ORDERER_ADMIN_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_ADMIN_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_ADMIN_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:6001
+      - ORDERER_OPERATIONS_LISTENADDRESS=orderer.example.com:10000
+      - ORDERER_METRICS_PROVIDER=prometheus
+    working_dir: /root
+    command: orderer
+    volumes:
+        - ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+        - ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+        - orderer.example.com:/var/hyperledger/production/orderer
+    ports:
+      - 6000:6000
+      - 6001:6001
+      - 10000:10000
+    networks:
+      - thesis
+#~###########Cline Container###########
+  anchor.client.example.com:
+    container_name: anchor.client.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
+      - CORE_PEER_ID=anchor.client.example.com
+      - CORE_PEER_ADDRESS=anchor.client.example.com:7000
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7000
+      - CORE_PEER_CHAINCODEADDRESS=anchor.client.example.com:7001
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7001
+      - CORE_PEER_GOSSIP_BOOTSTRAP=anchor.client.example.com:7000
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=anchor.client.example.com:7000
+      - CORE_PEER_LOCALMSPID=ClientOrgMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=anchor.client.example.com:10010
+      - CORE_METRICS_PROVIDER=prometheus
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"anchorClient"}
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    volumes:
+      - ../orgCrypto/peerOrganizations/client.example.com/peers/anchor.client.example.com:/etc/hyperledger/fabric
+      - anchor.client.example.com:/var/hyperledger/production
+    ports:
+      - 7000:7000
+      - 10010:10010
+    networks:
+      - thesis
+  
+  backup.client.example.com:
+    container_name: backup.client.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
+      - CORE_PEER_ID=backup.client.example.com
+      - CORE_PEER_ADDRESS=backup.client.example.com:7010
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7010
+      - CORE_PEER_CHAINCODEADDRESS=backup.client.example.com:7011
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7011
+      - CORE_PEER_GOSSIP_BOOTSTRAP=backup.client.example.com:7010
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=backup.client.example.com:7010
+      - CORE_PEER_LOCALMSPID=ClientOrgMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=backup.client.example.com:10011
+      - CORE_METRICS_PROVIDER=prometheus
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"backupClient"}
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    volumes:
+      - ../orgCrypto/peerOrganizations/client.example.com/peers/backup.client.example.com:/etc/hyperledger/fabric
+      - backup.client.example.com:/var/hyperledger/production
+    ports:
+      - 7010:7010
+      - 10011:10011
+    networks:
+      - thesis
+#~###########Law Firm Container###########
+  anchor.lawfirm.example.com:
+    container_name: anchor.lawfirm.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
+      - CORE_PEER_ID=anchor.lawfirm.example.com
+      - CORE_PEER_ADDRESS=anchor.lawfirm.example.com:8000
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8000
+      - CORE_PEER_CHAINCODEADDRESS=anchor.lawfirm.example.com:8001
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8001
+      - CORE_PEER_GOSSIP_BOOTSTRAP=anchor.lawfirm.example.com:8000
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=anchor.lawfirm.example.com:8000
+      - CORE_PEER_LOCALMSPID=lawfirmOrgMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=anchor.lawfirm.example.com:10020
+      - CORE_METRICS_PROVIDER=prometheus
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"anchorlawfirm"}
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    volumes:
+      - ../orgCrypto/peerOrganizations/lawfirm.example.com/peers/anchor.lawfirm.example.com:/etc/hyperledger/fabric
+      - anchor.lawfirm.example.com:/var/hyperledger/production
+    ports:
+      - 8000:8000
+      - 10020:10020
+    networks:
+      - thesis
+  
+  backup.lawfirm.example.com:
+    container_name: backup.lawfirm.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
+      - CORE_PEER_ID=backup.lawfirm.example.com
+      - CORE_PEER_ADDRESS=backup.lawfirm.example.com:8010
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8010
+      - CORE_PEER_CHAINCODEADDRESS=backup.lawfirm.example.com:8011
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8011
+      - CORE_PEER_GOSSIP_BOOTSTRAP=backup.lawfirm.example.com:8010
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=backup.lawfirm.example.com:8010
+      - CORE_PEER_LOCALMSPID=lawfirmOrgMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=backup.lawfirm.example.com:10021
+      - CORE_METRICS_PROVIDER=prometheus
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"backuplawfirm"}
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    volumes:
+      - ../orgCrypto/peerOrganizations/lawfirm.example.com/peers/backup.lawfirm.example.com:/etc/hyperledger/fabric
+      - backup.lawfirm.example.com:/var/hyperledger/production
+    ports:
+      - 8010:8010
+      - 10021:10021
+    networks:
+      - thesis
+#~###########Retail Container###########
+  anchor.retail.example.com:
+    container_name: anchor.retail.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
+      - CORE_PEER_ID=anchor.retail.example.com
+      - CORE_PEER_ADDRESS=anchor.retail.example.com:9000
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9000
+      - CORE_PEER_CHAINCODEADDRESS=anchor.retail.example.com:9001
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9001
+      - CORE_PEER_GOSSIP_BOOTSTRAP=anchor.retail.example.com:9000
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=anchor.retail.example.com:9000
+      - CORE_PEER_LOCALMSPID=retailOrgMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=anchor.retail.example.com:10030
+      - CORE_METRICS_PROVIDER=prometheus
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"anchorretail"}
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    volumes:
+      - ../orgCrypto/peerOrganizations/retail.example.com/peers/anchor.retail.example.com:/etc/hyperledger/fabric
+      - anchor.retail.example.com:/var/hyperledger/production
+    ports:
+      - 9000:9000
+      - 10030:10030
+    networks:
+      - thesis
+  
+  backup.retail.example.com:
+    container_name: backup.retail.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
+      - CORE_PEER_ID=backup.retail.example.com
+      - CORE_PEER_ADDRESS=backup.retail.example.com:9010
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9010
+      - CORE_PEER_CHAINCODEADDRESS=backup.retail.example.com:9011
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9011
+      - CORE_PEER_GOSSIP_BOOTSTRAP=backup.retail.example.com:9010
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=backup.retail.example.com:9010
+      - CORE_PEER_LOCALMSPID=retailOrgMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=backup.retail.example.com:10021
+      - CORE_METRICS_PROVIDER=prometheus
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"backupretail"}
+      - CORE_CHAINCODE_EXECUTETIMEOUT=300s
+    volumes:
+      - ../orgCrypto/peerOrganizations/retail.example.com/peers/backup.retail.example.com:/etc/hyperledger/fabric
+      - backup.retail.example.com:/var/hyperledger/production
+    ports:
+      - 9010:9010
+      - 10031:10031
+    networks:
+      - thesis
+  

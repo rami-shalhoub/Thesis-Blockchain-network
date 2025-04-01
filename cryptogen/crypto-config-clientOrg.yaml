@@ -1,0 +1,18 @@
+# ---------------------------------------------------------------------------
+# "PeerOrgs" - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  - Name: clientOrg
+    Domain: clientOrg.example.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: anchor
+        SANS:
+          - localhost
+      - Hostname: backup
+        SANS:
+          - localhost
+    Users:
+      Count: 1	#The number of user accounts _in addition_ to Admin
+      Specs:
+        - Name: client
