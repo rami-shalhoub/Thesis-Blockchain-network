@@ -1,0 +1,60 @@
+{
+    "name": "thesis-network-${ORG}Org",
+    "version": "1.0.0",
+    "client": {
+        "organization": "${ORG}Org",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "${ORG}Org": {
+            "mspid": "${ORG}OrgMSP",
+            "peers": [
+                "anchor.${ORG}.example.com",
+                "backup.${ORG}.example.com"
+            ],
+            "certificateAuthorities": [
+                "ca.${ORG}.example.com"
+            ]
+        }
+    },
+    "peers": {
+        "anchor.${ORG}.example.com": {
+            "url": "grpcs://localhost:${anchorPORT}",
+            "tlsCACerts": {
+                "pem": "${PEERPEM}"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "anchor.${ORG}.example.com",
+                "hostnameOverride": "anchor.${ORG}.example.com"
+            }
+        },
+        "backup.${ORG}.example.com": {
+            "url": "grpcs://localhost:${backupPORT}",
+            "tlsCACerts": {
+                "pem": "${PEERPEM}"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "backup.${ORG}.example.com",
+                "hostnameOverride": "backup.${ORG}.example.com"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca.${ORG}.example.com": {
+            "url": "https://localhost:${CAPORT}",
+            "caName": "ca-${ORG}Org",
+            "tlsCACerts": {
+                "pem": "${CAPEM}"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

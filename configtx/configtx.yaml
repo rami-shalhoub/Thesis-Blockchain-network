@@ -45,8 +45,8 @@ Organizations:
           Port: 7000
 
   - &LawFirmOrg
-      Name: LawFirmOrg
-      ID: LawFirmMSP
+      Name: LawFirmOrgMSP
+      ID: LawFirmOrgMSP
       MSPDir: ../orgCrypto/peerOrganizations/lawfirm.example.com/msp
       Policies:
         Readers:
@@ -168,7 +168,7 @@ Orderer: &OrdererDefaults
 #   genesis block for channel related parameters.
 #
 ################################################################################
-Channel: &ChannelDefaults>
+Channel: &ChannelDefaults
   Policies:
     Readers:
       Type: ImplicitMeta
@@ -189,34 +189,22 @@ Channel: &ChannelDefaults>
 #   as parameters to the configtxgen tool
 #
 ################################################################################
-#TODO create a proper profile 
 Profiles:
-  ChannelUsingRaft:
+  # Genesis block for the orderer system channel
+  OrdererGenesis:
     <<: *ChannelDefaults
     Orderer:
       <<: *OrdererDefaults
-      OrdererType: etcdraft
       EtcdRaft:
         Consenters:
           - Host: orderer.example.com
             Port: 6000
-            ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-            ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+            ClientTLSCert: ../orgCrypto/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+            ServerTLSCert: ../orgCrypto/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
       Organizations:
         - *OrdererOrg
-      Capabilities: *OrdererCapabilities
-    Application:
-      <<: *ApplicationDefaults
-      Organizations:
-        - *Org1
-        - *Org2
-      Capabilities: *ApplicationCapabilities
-      
-  OrdererGenesis:
-    Orderer:
-      <<: *OrdererDefaults
-      Organizations:
-        - *OrdererOrg
+      Capabilities:
+        <<: *OrdererCapabilities
     Consortiums:
       LawFirmClientConsortium:
         Organizations:
@@ -227,18 +215,52 @@ Profiles:
           - *RetailOrg
           - *ClientOrg
 
+  # Channel for LawFirm and Client
   LawFirmClientChannel:
+    <<: *ChannelDefaults
     Consortium: LawFirmClientConsortium
     Application:
       <<: *ApplicationDefaults
       Organizations:
         - *LawFirmOrg
         - *ClientOrg
+      Capabilities:
+        <<: *ApplicationCapabilities
+      Policies:
+        Readers:
+          Type: Signature
+          Rule: "OR('LawFirmOrgMSP.member', 'ClientOrgMSP.member')"
+        Writers:
+          Type: Signature
+          Rule: "OR('LawFirmOrgMSP.member', 'ClientOrgMSP.member')"
+        Admins:
+          Type: Signature
+          Rule: "OR('LawFirmOrgMSP.admin', 'ClientOrgMSP.admin')"
+        Endorsement:
+          Type: Signature
+          Rule: "AND('LawFirmOrgMSP.peer', 'ClientOrgMSP.peer')"
 
+  # Channel for Retail and Client
   RetailClientChannel:
+    <<: *ChannelDefaults
     Consortium: RetailClientConsortium
     Application:
       <<: *ApplicationDefaults
       Organizations:
         - *RetailOrg
         - *ClientOrg
+      Capabilities:
+        <<: *ApplicationCapabilities
+      Policies:
+        Readers:
+          Type: Signature
+          Rule: "OR('RetailOrgMSP.member', 'ClientOrgMSP.member')"
+        Writers:
+          Type: Signature
+          Rule: "OR('RetailOrgMSP.member')"
+        Admins:
+          Type: Signature
+          Rule: "OR('RetailOrgMSP.admin', 'ClientOrgMSP.admin')"
+        Endorsement:
+          Type: Signature
+          Rule: "AND('RetailOrgMSP.peer')"
