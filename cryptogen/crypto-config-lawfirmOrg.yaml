@@ -1,9 +1,13 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 # ---------------------------------------------------------------------------
 # "PeerOrgs" - Definition of organizations managing peer nodes
 # ---------------------------------------------------------------------------
 PeerOrgs:
   - Name: lawfirmOrg
-    Domain: lawfirmOrg.example.com
+    Domain: lawfirm.example.com
     EnableNodeOUs: true
     Specs:
       - Hostname: anchor
@@ -13,6 +17,6 @@ PeerOrgs:
         SANS:
           - localhost
     Users:
-      Count: 1	#The number of user accounts _in addition_ to Admin
+      Count: 1 #The number of user accounts _in addition_ to Admin
       Specs:
         - Name: lawyer

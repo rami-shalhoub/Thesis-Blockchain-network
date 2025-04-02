@@ -1,10 +1,14 @@
-################################################################################
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+#---------------------------------------------------------------------------
 #
 #?  Section: Organizations
 #
 #   - This section defines the different organizational identities
 #
-################################################################################
+#---------------------------------------------------------------------------
 Organizations:
   - &OrdererOrg
       Name: OrdererOrg
@@ -85,13 +89,13 @@ Organizations:
       AnchorPeers:
         - Host: anchor.retail.example.com
           Port: 9000
-################################################################################
+#---------------------------------------------------------------------------
 #
 #?  SECTION: Capabilities
 #
 #   - This section defines the capabilities of fabric network.
 #
-################################################################################
+#---------------------------------------------------------------------------
 Capabilities:
   Channel: &ChannelCapabilities
     V2_0: true
@@ -101,14 +105,14 @@ Capabilities:
 
   Application: &ApplicationCapabilities
     V2_5: true
-################################################################################
+#---------------------------------------------------------------------------
 #
 #   SECTION: Application
 #
 #   - This section defines the values to encode into a config transaction or
 #   genesis block for application related parameters
 #
-################################################################################
+#---------------------------------------------------------------------------
 Application: &ApplicationDefaults
   Organizations:
   Policies:
@@ -129,14 +133,14 @@ Application: &ApplicationDefaults
       Rule: "MAJORITY Endorsement"
   Capabilities:
     <<: *ApplicationCapabilities
-################################################################################
+#---------------------------------------------------------------------------
 #
 #?  SECTION: Orderer
 #
 #   - This section defines the values to encode into a config transaction or
 #   genesis block for orderer related parameters
 #
-################################################################################
+#---------------------------------------------------------------------------
 Orderer: &OrdererDefaults
   OrdererType: etcdraft
   Addresses:
@@ -160,14 +164,14 @@ Orderer: &OrdererDefaults
     BlockValidation:
       Type: ImplicitMeta
       Rule: "ANY Writers"
-################################################################################
+#---------------------------------------------------------------------------
 #
 #?  CHANNEL
 #
 #   This section defines the values to encode into a config transaction or
 #   genesis block for channel related parameters.
 #
-################################################################################
+#---------------------------------------------------------------------------
 Channel: &ChannelDefaults
   Policies:
     Readers:
@@ -181,14 +185,14 @@ Channel: &ChannelDefaults
       Rule: "MAJORITY Admins"
   Capabilities:
     <<: *ChannelCapabilities
-################################################################################
+#---------------------------------------------------------------------------
 #
 #?  Profile
 #
 #   - Different configuration profiles may be encoded here to be specified
 #   as parameters to the configtxgen tool
 #
-################################################################################
+#---------------------------------------------------------------------------
 Profiles:
   # Genesis block for the orderer system channel
   OrdererGenesis:

@@ -1,9 +1,13 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 services:
-################################################################################
+#---------------------------------------------------------------------------
 #
 #?  Client containers
 #
-################################################################################
+#---------------------------------------------------------------------------
   anchor.client.example.com: 
     container_name: anchor.client.example.com
     image: hyperledger/fabric-peer:latest
@@ -28,11 +32,11 @@ services:
       - ./docker/peercfg:/etc/hyperledger/peercfg
       - ${DOCKER_SOCK}:/host/var/run/docker.sock
 
-################################################################################
+#---------------------------------------------------------------------------
 #
 #?  Law Firm containers
 #
-################################################################################
+#---------------------------------------------------------------------------
   anchor.lawfirm.example.com:
     container_name: anchor.lawfirm.example.com
     image: hyperledger/fabric-peer:latest
@@ -58,11 +62,11 @@ services:
       - ./docker/peercfg:/etc/hyperledger/peercfg
       - ${DOCKER_SOCK}:/host/var/run/docker.sock 
 
-################################################################################
+#---------------------------------------------------------------------------
 #
 #?  Retail containers
 #
-################################################################################
+#---------------------------------------------------------------------------
   anchor.retail.example.com:
     container_name: anchor.retail.example.com
     image: hyperledger/fabric-peer:latest
