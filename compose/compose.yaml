@@ -81,7 +81,7 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/client.example.com/anchor.client.example.com
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -118,7 +118,7 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/client.example.com/backup.client.example.com
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -155,7 +155,7 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/lawfirm.example.com/anchor.lawfirm.example.com
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -192,7 +192,7 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/lawfirm.example.com/backup.lawfirm.example.com
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -229,7 +229,7 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/retail.example.com/anchor.retail.example.com
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -266,7 +266,7 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/retail.example.com/backup.retail.example.com
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true

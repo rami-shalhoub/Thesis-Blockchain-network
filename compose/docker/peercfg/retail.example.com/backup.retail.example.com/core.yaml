@@ -1,0 +1,445 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+###############################################################################
+#
+#    Peer section
+#
+###############################################################################
+peer:
+  id: backup.retail.exmpale.com                           #~The name of the Peer
+  network: thesis                                         #~The name of the network 
+  listenAddress: 0.0.0.0:9010                             #~The Address at local network interface this Peer will listen on
+  chaincodeListenAddress: 0.0.0.0:9011                    #~The endpoint this peer uses to listen for inbound chaincode connections
+  address: 0.0.0.0:9010                                   #~The endpoint to other peers in the same organization
+  addressAutoDetect: false                                #~Whether the Peer should programmatically determine its address
+
+  #& Settings for the Peer's gateway server.
+  gateway:
+    enable: true                                          #~Whether the gateway is enabled for this Peer
+    endorsementTimeout: 30s                               #~The duration the gateway waits for a response from other endorsing peers before returning a timeout error to the client
+    dialTimeout: 2m                                       #~The duration the gateway waits for a connection to other network nodes
+
+  #& Keepalive settings for peer server and clients
+  keepalive:
+    interval: 7200s                                       #~The duration after which if the server does not see any activity from the client, it pings the client to see if it's alive
+    timeout: 20s                                          #~The duration the server waits for a response from the client after sending a ping before closing the connection
+    minInterval: 60s                                      #~The minimum permitted time between client pings
+
+    #? Client keepalive settings for communicating with other peer nodes
+    client:
+      interval: 60s                                       #~The time between pings to peer nodes. This must greater than or equal to the minInterval specified by peer nodes
+      timeout: 20s                                        #~The duration the client waits for a response from peer nodes before closing the connection
+
+    #? DeliveryClient keepalive settings for communication with ordering nodes.
+    deliveryclient:
+      interval: 60s                                       #~Tthe time between pings to ordering nodes. This must greater than or equal to the minInterval specified by ordering nodes
+      timeout: 20s                                        #~The duration the client waits for a response from ordering nodes before closing the connection
+  
+  #& Gossip related configuration
+  gossip:
+    bootstrap: 127.0.0.1:9010                             #~Initialising gossip withis this list of other peers 𝗜𝗡 𝗧𝗛𝗘 𝗦𝗔𝗠𝗘 𝗢𝗥𝗚𝗔𝗡𝗜𝗦𝗔𝗧𝗜𝗢𝗡 that this peer reaches out of at stratup
+    #-===================================================================================================
+    #!         𝗼𝗿𝗴𝗟𝗲𝗮𝗱𝗲𝗿 𝗮𝗻𝗱 𝘂𝘀𝗲𝗟𝗲𝗮𝗱𝗲𝗿𝗘𝗹𝗲𝗰𝘁𝗶𝗼𝗻 𝗽𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀 𝗮𝗿𝗲 𝗺𝘂𝘁𝘂𝗮𝗹 𝗲𝘅𝗰𝗹𝘂𝘀𝗶𝘃𝗲
+    #! Setting both to true would result in the termination of the peer since this is undefined state.
+    #! If the peers are configured with useLeaderElection=false, make sure there is at least 1 peer in
+    #! the organization that its orgLeader is set to true.
+    #-=================================================================================================== 
+    useLeaderElection: false                              #~Defines whenever peer will initialize dynamic algorithm for 𝘭𝘦𝘢𝘥𝘦𝘳 selection
+    orgLeader: true                                       #~Statically defines peer to be an organization 𝘭𝘦𝘢𝘥𝘦𝘳
+    membershipTrackerInterval: 5s                         #~Interval for membershipTracker polling
+    endpoint:                                             #~Overrides the endpoint that the peer publishes to peers 𝗶𝗻 𝗶𝘁𝘀 𝗼𝗿𝗴𝗮𝗻𝗶𝘇𝗮𝘁𝗶𝗼𝗻.
+    maxBlockCountToStore: 10                              #~Maximum count of blocks stored in memory
+    maxPropagationBurstLatency: 10ms                      #~Max time between consecutive message pushes
+    maxPropagationBurstSize: 10                           #~Max number of messages stored until a push is triggered to remote peers
+    propagateIterations: 1                                #~Number of times a message is pushed to remote peers
+    propagatePeerNum: 2                                   #~Number of peers selected to push messages to
+    pullInterval: 4s                                      #~Determines frequency of pull phases, Must be greater than digestWaitTime + responseWaitTime
+    pullPeerNum: 2                                        #~Number of peers to pull from
+    requestStateInfoInterval: 4s                          #~Determines frequency of pulling state info messages from peers
+    publishStateInfoInterval: 4s                          #~Determines frequency of pushing state info messages to peers
+    stateInfoRetentionInterval:                           #~Maximum time a stateInfo message is kept until expired
+    publishCertPeriod: 10s                                #~Time from startup certificates are included in Alive messages
+    skipBlockVerification: false                          #~Should we skip verifying block messages or not (currently not in use)
+    dialTimeout: 3s                                       #~Dial timeout
+    connTimeout: 2s                                       #~Connection timeout
+    recvBuffSize: 20                                      #~Buffer size of received messages
+    sendBuffSize: 200                                     #~Buffer size of sending messages
+    digestWaitTime: 1s                                    #~Time to wait before pull engine processes incoming digests, Should be slightly smaller than requestWaitTime
+    requestWaitTime: 1500ms                               #~Time to wait before pull engine removes incoming nonce, Should be slightly bigger than digestWaitTime
+    responseWaitTime: 2s                                  #~Time to wait before pull engine ends pull
+    aliveTimeInterval: 5s                                 #~Alive check interval
+    aliveExpirationTimeout: 25s                           #~Alive expiration timeout
+    reconnectInterval: 25s                                #~Reconnect interval
+    maxConnectionAttempts: 120                            #~Max number of attempts to connect to a peer
+    msgExpirationFactor: 20                               #~Message expiration factor for alive messages
+    externalEndpoint: 0.0.0.0:9012                        #~This is an endpoint that is published to peers outside of the organization, if this isn't set, the peer will not be known to other organizations
+    
+    #? Leader election service configuration
+    election:
+      startupGracePeriod: 15s                             #~Longest time peer waits for stable membership during leader election startup
+      membershipSampleInterval: 1s                        #~Interval gossip membership samples to check its stability
+      leaderAliveThreshold: 10s                           #~Time passes since last declaration message before peer decides to perform leader election
+      leaderElectionDuration: 5s                          #~Time between peer sends propose message and declares itself as a leader (sends declaration message)
+    
+    #? Private Data
+    pvtData:
+      pullRetryThreshold: 60s                             #~The maximum duration of time private data corresponding for a given block would be attempted to be pulled from peers until the block would be committed without the private data
+      transientstoreMaxBlockRetention: 1000               #~Defines the maximum difference between the current ledger's height upon commit, and the private data residing inside the transient store that is guaranteed not to be purged
+      pushAckTimeout: 3s                                  #~The maximum time to wait for an acknowledgement from each peer at private data push at endorsement time
+      btlPullMargin: 10                                   #~Block to live pulling margin, used as a buffer to prevent peer from trying to pull private data from peers that is soon to be purged in next N blocks. This helps a newly joined peer catch up to current blockchain height quicker
+      reconcileBatchSize: 10                              #~Determines the maximum batch size of missing private data that will be reconciled in a single iteration
+      reconcileSleepInterval: 1m                          #~ReconcileSleepInterval determines the time reconciler sleeps from end of an iteration until the beginning of the next reconciliation iteration
+      reconciliationEnabled: true                         #~A flag that indicates whether private data reconciliation is enable or not
+      skipPullingInvalidTransactionsDuringCommit: false   #~A flag that indicates whether pulling of invalid transaction's private data from other peers need to be skipped during the commit time and pulled only through reconciler
+      implicitCollectionDisseminationPolicy:              #~Specifies the dissemination  policy for the peer's own implicit collection. When a peer endorses a proposal that writes to its own implicit collection, below values override the default values for disseminating private data.
+        #-===================================================================================================
+        #! Note that it is applicable to all channels the peer has joined. 
+        #! The implication is that requiredPeerCount has tobe smaller than the number of peers in a channel
+        #! that has the lowest numbers of peers from the organization.
+        #-===================================================================================================
+        requiredPeerCount: 0 #Default value is 0          #~Defines the minimum number of eligible peers to which the peer must successfully disseminate private data for its own implicit collection during endorsement
+        maxPeerCount: 1 #Default value is 1               #~Defines the maximum number of eligible peers to which the peer will attempt to disseminate private data for its own implicit collection during endorsement
+
+    #? Gossip state transfer related configuration
+    state:
+      enable: false #Default value is false               #~Indicates whenever state transfer is enabled or not default value is false
+                                                          #~i.e. state transfer is active and takes care to sync up missing blocks allowing lagging peer to catch up to speed with rest network.
+                                                          #-==================================================================================================================================
+                                                          #* Keep in mind that when peer.gossip.useLeaderElection is true and there are several peers in the organization,
+                                                          #* or peer.gossip.useLeaderElection is false alongside with peer.gossip.orgleader being false, the peer's ledger may lag behind
+                                                          #* the rest of the peers and will never catch up due to state transfer being disabled.
+                                                          #-==================================================================================================================================
+      checkInterval: 10s                                  #~check whether peer is lagging behind enough to request blocks via state transfer from another peer
+      responseTimeout: 3s                                 #~The amount of time to wait for state transfer response from other peers
+      batchSize: 10                                       #~The number of blocks to request via state transfer from another peer
+      blockBufferSize: 20                                 #~The size of the re-ordering buffer which captures blocks and takes care to deliver them in order down to the ledger layer
+                                                          #*The actual buffer size is bounded between0 and 2*blockBufferSize, each channel maintains its own buffer
+      maxRetries: 3                                       #~Maximum number of re-tries to ask for single state transfer request
+
+  #& TLS Settings
+  tls:
+    enabled:  false                                       #~Require server-side TLS
+    clientAuthRequired: false                             #~Require client certificates / mutual TLS for inbound connections
+    cert:                                                 #~X.509 certificate used for TLS server
+      file: tls/server.crt
+    key:                                                  #~Private key used for TLS server
+      file: tls/server.key
+    rootcert:                                             #~The trusted root certificate chain used for verifying certificates of other nodes during outbound connections
+      file: tls/ca.crt
+    clientRootCAs:                                        #~If mutual TLS is enabled, clientRootCAs.files contains a list of additional root certificates used for verifying certificates of client connections
+      files:
+        - tls/ca.crt
+    clientKey:                                            #~Private key used for TLS when making client connections. If not set, peer.tls.key.file will be used instead
+      file:
+    clientCert:                                           #~X.509 certificate used for TLS when making client connections. If not set, peer.tls.cert.file will be used instead
+      file:
+
+  #+ Configuration parameters related to authenticating client messages
+  authentication:
+      timewindow: 15m                                     #~The acceptable difference between the current server time and the client's time as specified in a client request message
+  
+  #+ Path on the file system where peer will store data (e.g ledger)
+  fileSystemPath: /var/hyperledger/production
+
+  #& BCCSP (Blockchain crypto provider): Select which crypto implementation or library to use
+  BCCSP:
+    Default: SW                                           #~Settings for the SW crypto provider (i.e. when DEFAULT: SW)
+    SW:
+      #-===========================================================================
+      #todo                              TODO
+      #todo   The default Hash and Security level needs refactoring to be
+      #todo   fully configurable. Changing these defaults requires coordination
+      #todo   SHA2 is hardcoded in several places, not only BCCSP
+      #-===========================================================================
+      Hash: SHA2
+      Security: 256
+      FileKeyStore:                                       #~Location of Key Store. If empty, defaults to 'mspConfigPath'/keystore
+          KeyStore:
+    PKCS11:                                               #~Settings for the PKCS#11 crypto provider (i.e. when DEFAULT: PKCS11)
+      Library:                                            #~Location of the PKCS11 module library
+      Label:                                              #~Token Label
+      Pin:                                                #~User PIN
+      Hash:
+      Security:
+  
+  #+ Path on the file system where peer will find MSP local configurations
+  mspConfigPath: /etc/hyperledger/fabric/msp
+
+  #+ Identifier of the local MSP
+  localMspId: RetailOrgMSP
+
+  #+ CLI common client config options
+  client:
+    connTimeout: 3s                                       #~Connection timeout
+
+  #& Delivery service related config
+  deliveryclient:
+      blockGossipEnabled: true                            #~Enables this peer to disseminate blocks it pulled from the ordering service via gossip
+      reconnectTotalTimeThreshold: 3600s                  #~The total time the delivery service may spend in reconnection attempts until its retry logic gives up and returns an error
+      connTimeout: 3s                                     #~The delivery service <-> ordering service node connection timeout
+      reConnectBackoffThreshold: 3600s                    #~The delivery service maximal delay between consecutive retries
+      addressOverrides:                                   #~A list of orderer endpoint addresses which should be overridden when found in channel configurations.
+      #  - from:
+      #    to:
+      #    caCertsFile:
+      #  - from:
+      #    to:
+      #    caCertsFile:
+  
+  #+ Type for the local MSP - by default it's of type bccsp
+  localMspType: bccsp
+
+  #+ Used with Go profiling tools only in none production environment
+  profile:                                                #~In production, it should be disabled (eg enabled: false)
+    enabled: false
+    listenAddress: 0.0.0.0:6060
+
+  #-==============================================================================================
+  #&  Handlers defines custom handlers that can filter and mutate
+  #&  objects passing within the peer, such as:
+  #&    Auth filter - reject or forward proposals from clients
+  #&    Decorators  - append or mutate the chaincode input passed to the chaincode
+  #&    Endorsers   - Custom signing over proposal response payload and its mutation
+  #&  Valid handler definition contains:
+  #&    - A name which is a factory method name defined in
+  #&      core/handlers/library/library.go for statically compiled handlers
+  #&    - library path to shared object binary for pluggable filters
+  #&  Auth filters and decorators are chained and executed in the order that they are defined
+  #-==============================================================================================
+  #&  Endorsers are configured as a map that its keys are the endorsement system chaincodes
+  #&  that are being overridden.
+  #&  If the 'library' property is missing, the name is used as the constructor method
+  #&  in the builtin library similar to auth filters and decorators.
+  #-==============================================================================================
+  handlers:
+    authFilters:
+      -
+        name: DefaultAuth
+      -
+        name: ExpirationCheck                             #~This filter checks identity x509 certificate expiration
+    decorators:
+      -
+        name: DefaultDecorator
+    endorsers:
+      escc:
+        name: DefaultEndorsement
+        library:
+    validators:
+      vscc:
+        name: DefaultValidation
+        library:
+
+  #+ Number of goroutines that will execute transaction validation in parallel.
+  validatorPoolSize:
+
+  #-============================================================================
+  #& The discovery service is used by clients to query information about peers,
+  #& such as - which peers have joined a certain channel, what is the latest
+  #& channel config, and most importantly - given a chaincode and a channel,
+  #& what possible sets of peers satisfy the endorsement policy
+  #-============================================================================
+  discovery:
+    enabled: true                                         
+    authCacheEnabled: true                                #~Whether the authentication cache is enabled or not
+    authCacheMaxSize: 1000                                #~The maximum size of the cache, after which a purge takes place
+    authCachePurgeRetentionRatio: 0.75                    #~The proportion (0 to 1) of entries that remain in the cache after the cache is purged due to overpopulation
+    orgMembersAllowedAccess: false                        #~Whether to allow non-admins to perform non channel scoped queries
+
+  #& Limits is used to configure some internal resource limits.
+  limits:
+    concurrency:                                          #~Concurrency limits the number of concurrently running requests to a service on each peer
+      endorserService: 2500                               #~Limits concurrent requests to endorser service that handles chaincode deployment, query and invocation,including both user chaincodes and system chaincodes
+      deliverService: 2500                                #~DeliverService limits concurrent event listeners registered to deliver service for blocks and transaction events
+
+
+  #+ Max message size in bytes GRPC server and client can receive
+  maxRecvMsgSize: 104857600
+  #+ Max message size in bytes GRPC server and client can send
+  maxSendMsgSize: 104857600
+###############################################################################
+#
+#    VM section
+#
+###############################################################################
+vm:
+  #-========================================================================================
+  #& Endpoint of the vm management system.  For docker can be one of the following in general
+  #& unix:///var/run/docker.sock
+  #& http://localhost:2375
+  #& https://localhost:2376
+  #-========================================================================================
+  endpoint: unix:///var/run/docker.sock
+
+  #& settings for docker vms
+  docker:
+    tls:
+      enabled: false
+      ca:
+        file: docker/ca.crt
+      cert:
+        file: docker/tls.crt
+      key:
+        file: docker/tls.key
+
+    attachStdout: false                                   #~Enables/disables the standard out/err from chaincode containers for debugging purposes
+
+    #? Parameters on creating docker container.
+    hostConfig:
+        NetworkMode: host
+        Dns:
+          # - 192.168.0.1
+        LogConfig:
+            Type: json-file
+            Config:
+                max-size: "50m"
+                max-file: "5"
+        Memory: 2147483648
+###############################################################################
+#
+#    Chaincode section
+#
+###############################################################################
+chaincode:
+
+  #& The id is used by the Chaincode stub to register the executing Chaincode ID with the Peer and is generally supplied through ENV variables
+  id:
+    path:
+    name:
+
+  #+ Generic builder environment, suitable for most chaincode types
+  builder: $(DOCKER_NS)/fabric-ccenv:$(TWO_DIGIT_VERSION)
+
+  #+ Enables/disables force pulling of the base docker images (listed below)
+  pull: false
+
+  golang:
+    runtime: $(DOCKER_NS)/fabric-baseos:$(TWO_DIGIT_VERSION)
+  dynamicLink: false                                      #~Whether or not golang chaincode should be linked dynamically
+
+  java:  
+    runtime: $(DOCKER_NS)/fabric-javaenv:2.5              #~This is an image based on java:openjdk-8 with addition compile tools added for java shim layer packaging.
+
+  node:
+    runtime: $(DOCKER_NS)/fabric-nodeenv:2.5              #~This is an image based on node:$(NODE_VER)-alpine
+
+  #& List of directories to treat as external builders and launchers for chaincode
+  externalBuilders:
+    - name: ccaas_builder
+      path: /opt/hyperledger/ccaas_builder
+      propagateEnvironment:
+        - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG
+
+
+  #+ The maximum duration to wait for the chaincode build and install process to complete.
+  installTimeout: 300s
+
+  #+ Timeout duration for starting up a container and waiting for Registerto come through.
+  startuptimeout: 300s
+
+  #+ Timeout duration for Invoke and Init calls to prevent runaway.
+  executetimeout: 30s
+
+  #-===============================================================
+  #+ There are 2 modes: "dev" and "net".
+  #+ In dev mode, user runs the chaincode after starting peer from
+  #+ command line on local machine.
+  #+ In net mode, peer will run chaincode in a docker container.
+  #-===============================================================
+  mode: net
+
+  #-===============================================================
+  #+ keepalive in seconds. In situations where the communication goes through a
+  #+ proxy that does not support keep-alive, this parameter will maintain connection
+  #+ between peer and chaincode.
+  #+ A value <= 0 turns keepalive off
+  #-===============================================================
+  keepalive: 0
+
+  #& enabled system chaincodes
+  system:
+    _lifecycle: enable
+    cscc: enable
+    lscc: enable
+    qscc: enable
+
+  #& Logging section for the chaincode container
+  logging:
+    level: info                                           #~Default level for all loggers within the chaincode container
+    shim: warning                                         #~Override default level for the 'shim' logger
+    format: '%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}' #~Format for the chaincode container logs
+###############################################################################
+#
+#    Ledger section - ledger configuration encompasses both the blockchain
+#    and the state
+#
+###############################################################################
+ledger:
+  blockchain:
+  state:
+    stateDatabase: goleveldb                              #~stateDatabase - options are "goleveldb", "CouchDB"
+    totalQueryLimit: 100000                               #~Limit on the number of records to return per query
+  history:
+    enableHistoryDatabase: true                           #~Indicates if the history of key updates should be stored
+  pvtdataStore:
+    collElgProcMaxDbBatchSize: 5000                       #~The maximum db batch size for converting the ineligible missing data entries to eligible missing data entries
+    collElgProcDbBatchesInterval: 1000                    #~the minimum duration (in milliseconds) between writing two consecutive db batches for converting the ineligible missing data entries to eligible missing data entries
+    #-===============================================================
+    #? The missing data entries are classified into two categories:
+    #? (1) prioritized
+    #? (2) deprioritized
+    #? Initially, all missing data are in the prioritized list. When the
+    #? reconciler is unable to fetch the missing data from other peers,
+    #? the unreconciled missing data would be moved to the deprioritized list.
+    #? The reconciler would retry deprioritized missing data after every
+    #? deprioritizedDataReconcilerInterval (unit: minutes). Note that the
+    #? interval needs to be greater than the reconcileSleepInterval
+    #-===============================================================
+    deprioritizedDataReconcilerInterval: 60m
+
+  snapshots:
+    rootDir: /var/hyperledger/production/snapshots        #~Path on the file system where peer will store ledger snapshots
+
+###############################################################################
+#
+#    Operations section
+#
+###############################################################################
+operations:
+  listenAddress: 127.0.0.1:10000                          #~Host and port for the operations server
+
+  #& TLS configuration for the operations endpoint
+  tls:
+    enabled: false                                        #~TLS enabled
+
+    #? path to PEM encoded server certificate for the operations server
+    cert:
+      file:
+
+    #? path to PEM encoded server key for the operations server
+    key:
+      file:
+
+    #+ most operations service endpoints require client authentication when TLS is enabled
+    clientAuthRequired: false
+
+    #? paths to PEM encoded ca certificates to trust for client authentication
+    clientRootCAs:
+      files: []
+
+###############################################################################
+#
+#    Metrics section
+#
+###############################################################################
+metrics:
+  provider: disabled                                      #~Metrics provider is one of statsd, prometheus, or disabled
+
+  #& statsd configuration
+  statsd:
+    network: udp                                          #~Network type: tcp or udp
+    address: 127.0.0.1:1092                               #~Statsd server address
+    writeInterval: 10s                                    #~The interval at which locally cached counters and gauges are pushed to statsd; timings are pushed immediately
+    prefix:                                               #~Prefix is prepended to all emitted statsd metrics
