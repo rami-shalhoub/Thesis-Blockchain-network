@@ -68,6 +68,7 @@ services:
         - ../orgCrypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
         - ../orgCrypto/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
         - orderer.example.com:/var/hyperledger/production/orderer
+        - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
       - 6000:6000
       - 6001:6001
@@ -81,7 +82,9 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/client.example.com/anchor.client.example.com
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_thesis
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -105,7 +108,10 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/client.example.com/peers/anchor.client.example.com:/etc/hyperledger/fabric
+      - ./docker/peercfg/client.example.com/anchor.client.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
+      - ./configtx:/etc/hyperledger/configtx
       - anchor.client.example.com:/var/hyperledger/production
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
       - 7000:7000
       - 10010:10010
@@ -118,7 +124,9 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/client.example.com/backup.client.example.com
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_thesis
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -142,7 +150,9 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/client.example.com/peers/backup.client.example.com:/etc/hyperledger/fabric
+      - ./docker/peercfg/client.example.com/backup.client.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - backup.client.example.com:/var/hyperledger/production
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
       - 7010:7010
       - 10011:10011
@@ -155,7 +165,9 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/lawfirm.example.com/anchor.lawfirm.example.com
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_thesis
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -179,7 +191,9 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/lawfirm.example.com/peers/anchor.lawfirm.example.com:/etc/hyperledger/fabric
+      - ./docker/peercfg/lawfirm.example.com/anchor.lawfirm.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - anchor.lawfirm.example.com:/var/hyperledger/production
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
       - 8000:8000
       - 10020:10020
@@ -192,7 +206,9 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/lawfirm.example.com/backup.lawfirm.example.com
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_thesis
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -216,7 +232,9 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/lawfirm.example.com/peers/backup.lawfirm.example.com:/etc/hyperledger/fabric
+      - ./docker/peercfg/lawfirm.example.com/backup.lawfirm.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - backup.lawfirm.example.com:/var/hyperledger/production
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
       - 8010:8010
       - 10021:10021
@@ -229,7 +247,9 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/retail.example.com/anchor.retail.example.com
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_thesis
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -253,7 +273,9 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/retail.example.com/peers/anchor.retail.example.com:/etc/hyperledger/fabric
+      - ./docker/peercfg/retail.example.com/anchor.retail.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - anchor.retail.example.com:/var/hyperledger/production
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
       - 9000:9000
       - 10030:10030
@@ -266,7 +288,9 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg/retail.example.com/backup.retail.example.com
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_thesis
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -290,7 +314,9 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/retail.example.com/peers/backup.retail.example.com:/etc/hyperledger/fabric
+      - ./docker/peercfg/retail.example.com/backup.retail.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - backup.retail.example.com:/var/hyperledger/production
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
       - 9010:9010
       - 10031:10031

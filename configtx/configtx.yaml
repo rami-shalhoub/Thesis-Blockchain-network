@@ -55,16 +55,16 @@ Organizations:
       Policies:
         Readers:
           Type: Signature
-          Rule: "OR('LawFirmMSP.admin', 'LawFirmMSP.peer', 'LawFirmMSP.client')"
+          Rule: "OR('LawFirmOrgMSP.admin', 'LawFirmOrgMSP.peer', 'LawFirmOrgMSP.client')"
         Writers:
           Type: Signature
-          Rule: "OR('LawFirmMSP.admin', 'LawFirmMSP.client')"
+          Rule: "OR('LawFirmOrgMSP.admin', 'LawFirmOrgMSP.client')"
         Admins:
           Type: Signature
-          Rule: "OR('LawFirmMSP.admin')"
+          Rule: "OR('LawFirmOrgMSP.admin')"
         Endorsement:
           Type: Signature
-          Rule: "OR('LawFirmMSP.peer')"
+          Rule: "OR('LawFirmOrgMSP.peer')"
       AnchorPeers:
         - Host: anchor.lawfirm.example.com
           Port: 8000
@@ -107,7 +107,7 @@ Capabilities:
     V2_5: true
 #---------------------------------------------------------------------------
 #
-#   SECTION: Application
+#?   SECTION: Application
 #
 #   - This section defines the values to encode into a config transaction or
 #   genesis block for application related parameters

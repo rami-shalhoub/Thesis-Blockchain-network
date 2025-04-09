@@ -7,7 +7,7 @@
 # ---------------------------------------------------------------------------
 PeerOrgs:
   - Name: retailOrg
-    Domain: retial.example.com
+    Domain: retail.example.com
     EnableNodeOUs: true
     Specs:
       - Hostname: anchor
