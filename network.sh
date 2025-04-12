@@ -162,8 +162,14 @@ function networkUp() {
 
     # now run the script that creates a channel. This script uses configtxgen once
     # to create the channel creation transaction and the anchor peer updates.
-    ./scripts/createChannel.sh "LawFirmClientChannel" $CLI_DELAY $MAX_RETRY $VERBOSE
-    # ./scripts/createChannel.sh "RetailClientChannel" $CLI_DELAY $MAX_RETRY $VERBOSE
+
+    if [ -d "channel-artifacts" ]; then
+        rm -Rf channel-artifacts
+    fi
+    mkdir -p channel-artifacts
+
+    ./scripts/createChannel.sh "lawfirmclientchannel" $CLI_DELAY $MAX_RETRY $VERBOSE "LawFirmClientChannel"
+    ./scripts/createChannel.sh "retailclientchannel" $CLI_DELAY $MAX_RETRY $VERBOSE "RetailClientChannel"
 }
 
 # Tear down running network

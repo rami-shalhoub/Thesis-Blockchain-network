@@ -183,7 +183,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8001
       - CORE_PEER_GOSSIP_BOOTSTRAP=anchor.lawfirm.example.com:8000
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=anchor.lawfirm.example.com:8000
-      - CORE_PEER_LOCALMSPID=lawfirmOrgMSP
+      - CORE_PEER_LOCALMSPID=LawFirmOrgMSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
       - CORE_OPERATIONS_LISTENADDRESS=anchor.lawfirm.example.com:10020
       - CORE_METRICS_PROVIDER=prometheus
@@ -224,7 +224,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8011
       - CORE_PEER_GOSSIP_BOOTSTRAP=backup.lawfirm.example.com:8010
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=backup.lawfirm.example.com:8010
-      - CORE_PEER_LOCALMSPID=lawfirmOrgMSP
+      - CORE_PEER_LOCALMSPID=LawFirmOrgMSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
       - CORE_OPERATIONS_LISTENADDRESS=backup.lawfirm.example.com:10021
       - CORE_METRICS_PROVIDER=prometheus
@@ -265,7 +265,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9001
       - CORE_PEER_GOSSIP_BOOTSTRAP=anchor.retail.example.com:9000
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=anchor.retail.example.com:9000
-      - CORE_PEER_LOCALMSPID=retailOrgMSP
+      - CORE_PEER_LOCALMSPID=RetailOrgMSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
       - CORE_OPERATIONS_LISTENADDRESS=anchor.retail.example.com:10030
       - CORE_METRICS_PROVIDER=prometheus
@@ -306,7 +306,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9011
       - CORE_PEER_GOSSIP_BOOTSTRAP=backup.retail.example.com:9010
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=backup.retail.example.com:9010
-      - CORE_PEER_LOCALMSPID=retailOrgMSP
+      - CORE_PEER_LOCALMSPID=RetailOrgMSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
       - CORE_OPERATIONS_LISTENADDRESS=backup.retail.example.com:10021
       - CORE_METRICS_PROVIDER=prometheus

@@ -194,9 +194,10 @@ Channel: &ChannelDefaults
 #
 #---------------------------------------------------------------------------
 Profiles:
-  # Genesis block for the orderer system channel
-  OrdererGenesis:
+  # Channel for LawFirm and Client
+  LawFirmClientChannel:
     <<: *ChannelDefaults
+    # Consortium: LawFirmClientConsortium
     Orderer:
       <<: *OrdererDefaults
       EtcdRaft:
@@ -209,20 +210,6 @@ Profiles:
         - *OrdererOrg
       Capabilities:
         <<: *OrdererCapabilities
-    Consortiums:
-      LawFirmClientConsortium:
-        Organizations:
-          - *LawFirmOrg
-          - *ClientOrg
-      RetailClientConsortium:
-        Organizations:
-          - *RetailOrg
-          - *ClientOrg
-
-  # Channel for LawFirm and Client
-  LawFirmClientChannel:
-    <<: *ChannelDefaults
-    Consortium: LawFirmClientConsortium
     Application:
       <<: *ApplicationDefaults
       Organizations:
@@ -247,7 +234,19 @@ Profiles:
   # Channel for Retail and Client
   RetailClientChannel:
     <<: *ChannelDefaults
-    Consortium: RetailClientConsortium
+    # Consortium: RetailClientConsortium
+    Orderer:
+      <<: *OrdererDefaults
+      EtcdRaft:
+        Consenters:
+          - Host: orderer.example.com
+            Port: 6000
+            ClientTLSCert: ../orgCrypto/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+            ServerTLSCert: ../orgCrypto/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+      Organizations:
+        - *OrdererOrg
+      Capabilities:
+        <<: *OrdererCapabilities
     Application:
       <<: *ApplicationDefaults
       Organizations:
