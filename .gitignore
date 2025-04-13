@@ -2,3 +2,4 @@ orgCrypto
 .vscode
 *.txt
 channel-artifacts
+.VSCodeCounter

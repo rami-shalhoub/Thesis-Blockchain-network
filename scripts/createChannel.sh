@@ -99,10 +99,10 @@ if [ "$PROFILE" == "LawFirmClientChannel" ]; then
 	joinChannel 2  # LawFirmOrg joins
 
 	#^ Set the anchor peers for each org in the channel
-	# infoln "Setting anchor peer for org1..."
-	# setAnchorPeer 1
-	# infoln "Setting anchor peer for org2..."
-	# setAnchorPeer 2
+	infoln "Setting anchor peer for ClientOrg..."
+	setAnchorPeer 1
+	infoln "Setting anchor peer for LawFirmOrg..."
+	setAnchorPeer 2
 else
 	#^ Join all the peers to the channel
 	infoln "Joining ClientOrg peers to RetailClientChannel..."
@@ -112,10 +112,10 @@ else
 	joinChannel 3  # RetailOrg joins
 	
 	#^ Set the anchor peers for each org in the channel
-	# infoln "Setting anchor peer for org1..."
-	# setAnchorPeer 1
-	# infoln "Setting anchor peer for org2..."
-	# setAnchorPeer 3
+	infoln "Setting anchor peer for ClientOrg..."
+	setAnchorPeer 1
+	infoln "Setting anchor peer for RetailOrg..."
+	setAnchorPeer 3
 fi
 
 

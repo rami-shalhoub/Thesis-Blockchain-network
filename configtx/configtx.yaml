@@ -44,9 +44,9 @@ Organizations:
         Endorsement:
           Type: Signature
           Rule: "OR('ClientOrgMSP.peer')"
-      AnchorPeers:
-        - Host: anchor.client.example.com
-          Port: 7000
+      # AnchorPeers:
+      #   - Host: anchor.client.example.com
+      #     Port: 7000
 
   - &LawFirmOrg
       Name: LawFirmOrgMSP
@@ -65,9 +65,9 @@ Organizations:
         Endorsement:
           Type: Signature
           Rule: "OR('LawFirmOrgMSP.peer')"
-      AnchorPeers:
-        - Host: anchor.lawfirm.example.com
-          Port: 8000
+      # AnchorPeers:
+      #   - Host: anchor.lawfirm.example.com
+      #     Port: 8000
 
   - &RetailOrg
       Name: RetailOrgMSP
@@ -86,9 +86,9 @@ Organizations:
         Endorsement:
           Type: Signature
           Rule: "OR('RetailOrgMSP.peer')"
-      AnchorPeers:
-        - Host: anchor.retail.example.com
-          Port: 9000
+      # AnchorPeers:
+      #   - Host: anchor.retail.example.com
+      #     Port: 9000
 #---------------------------------------------------------------------------
 #
 #?  SECTION: Capabilities
@@ -260,7 +260,7 @@ Profiles:
           Rule: "OR('RetailOrgMSP.member', 'ClientOrgMSP.member')"
         Writers:
           Type: Signature
-          Rule: "OR('RetailOrgMSP.member')"
+          Rule: "OR('RetailOrgMSP.member', 'ClientOrgMSP.admin')"
         Admins:
           Type: Signature
           Rule: "OR('RetailOrgMSP.admin', 'ClientOrgMSP.admin')"
