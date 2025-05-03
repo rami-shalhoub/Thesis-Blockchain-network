@@ -141,7 +141,7 @@ function networkUp() {
         createOrgs
     fi
 
-    COMPOSE_FILES="-f compose/compose.yaml"
+    COMPOSE_FILES="-f docker/compose.yaml"
     DOCKER_SOCK="${DOCKER_SOCK}" ${CONTAINER_CLI_COMPOSE} ${COMPOSE_FILES} up -d 2>&1
 
     $CONTAINER_CLI ps -a
@@ -174,8 +174,8 @@ function networkUp() {
 
 # Tear down running network
 function networkDown() {
-    COMPOSE_FILES="-f compose/compose.yaml"
-    # COMPOSE_FILES="-f compose/compose.yaml"
+    COMPOSE_FILES="-f docker/compose.yaml"
+    # COMPOSE_FILES="-f docker/compose.yaml"
     DOCKER_SOCK=$DOCKER_SOCK ${CONTAINER_CLI_COMPOSE} ${COMPOSE_FILES} ${COMPOSE_ORG3_FILES} down --volumes --remove-orphans
     #remove orderer block and other channel configuration transactions and certs
     ${CONTAINER_CLI} run --rm -v "$(pwd):/data" busybox sh -c 'cd /data && rm -rf channel-artifacts/*.block orgCrypto'        

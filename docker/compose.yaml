@@ -32,7 +32,7 @@ networks:
 #
 #---------------------------------------------------------------------------
 services:
-#~###########Orderer Container###########
+  #~###########Orderer Container###########
   orderer.example.com:
     container_name: orderer.example.com
     image: hyperledger/fabric-orderer:latest
@@ -65,17 +65,17 @@ services:
     working_dir: /root
     command: orderer
     volumes:
-        - ../orgCrypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
-        - ../orgCrypto/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
-        - orderer.example.com:/var/hyperledger/production/orderer
-        - ${DOCKER_SOCK}:/host/var/run/docker.sock
+      - ../orgCrypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+      - ../orgCrypto/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+      - orderer.example.com:/var/hyperledger/production/orderer
+      - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
       - 6000:6000
       - 6001:6001
       - 10000:10000
     networks:
       - thesis
-#~###########Cline Container###########
+  #~###########Cline Container###########
   anchor.client.example.com:
     container_name: anchor.client.example.com
     image: hyperledger/fabric-peer:latest
@@ -108,7 +108,7 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/client.example.com/peers/anchor.client.example.com:/etc/hyperledger/fabric
-      - ./docker/peercfg/client.example.com/anchor.client.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
+      - ./peercfg/client.example.com/anchor.client.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - ./configtx:/etc/hyperledger/configtx
       - anchor.client.example.com:/var/hyperledger/production
       - ${DOCKER_SOCK}:/host/var/run/docker.sock
@@ -117,7 +117,7 @@ services:
       - 10010:10010
     networks:
       - thesis
-  
+
   backup.client.example.com:
     container_name: backup.client.example.com
     image: hyperledger/fabric-peer:latest
@@ -150,7 +150,7 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/client.example.com/peers/backup.client.example.com:/etc/hyperledger/fabric
-      - ./docker/peercfg/client.example.com/backup.client.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
+      - ./peercfg/client.example.com/backup.client.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - backup.client.example.com:/var/hyperledger/production
       - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
@@ -158,7 +158,7 @@ services:
       - 10011:10011
     networks:
       - thesis
-#~###########Law Firm Container###########
+  #~###########Law Firm Container###########
   anchor.lawfirm.example.com:
     container_name: anchor.lawfirm.example.com
     image: hyperledger/fabric-peer:latest
@@ -191,7 +191,7 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/lawfirm.example.com/peers/anchor.lawfirm.example.com:/etc/hyperledger/fabric
-      - ./docker/peercfg/lawfirm.example.com/anchor.lawfirm.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
+      - ./peercfg/lawfirm.example.com/anchor.lawfirm.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - anchor.lawfirm.example.com:/var/hyperledger/production
       - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
@@ -199,7 +199,7 @@ services:
       - 10020:10020
     networks:
       - thesis
-  
+
   backup.lawfirm.example.com:
     container_name: backup.lawfirm.example.com
     image: hyperledger/fabric-peer:latest
@@ -232,7 +232,7 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/lawfirm.example.com/peers/backup.lawfirm.example.com:/etc/hyperledger/fabric
-      - ./docker/peercfg/lawfirm.example.com/backup.lawfirm.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
+      - ./peercfg/lawfirm.example.com/backup.lawfirm.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - backup.lawfirm.example.com:/var/hyperledger/production
       - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
@@ -240,7 +240,7 @@ services:
       - 10021:10021
     networks:
       - thesis
-#~###########Retail Container###########
+  #~###########Retail Container###########
   anchor.retail.example.com:
     container_name: anchor.retail.example.com
     image: hyperledger/fabric-peer:latest
@@ -273,7 +273,7 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/retail.example.com/peers/anchor.retail.example.com:/etc/hyperledger/fabric
-      - ./docker/peercfg/retail.example.com/anchor.retail.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
+      - ./peercfg/retail.example.com/anchor.retail.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - anchor.retail.example.com:/var/hyperledger/production
       - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
@@ -281,7 +281,7 @@ services:
       - 10030:10030
     networks:
       - thesis
-  
+
   backup.retail.example.com:
     container_name: backup.retail.example.com
     image: hyperledger/fabric-peer:latest
@@ -314,7 +314,7 @@ services:
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
       - ../orgCrypto/peerOrganizations/retail.example.com/peers/backup.retail.example.com:/etc/hyperledger/fabric
-      - ./docker/peercfg/retail.example.com/backup.retail.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
+      - ./peercfg/retail.example.com/backup.retail.example.com/core.yaml:/etc/hyperledger/peercfg/core.yaml
       - backup.retail.example.com:/var/hyperledger/production
       - ${DOCKER_SOCK}:/host/var/run/docker.sock
     ports:
@@ -322,4 +322,3 @@ services:
       - 10031:10031
     networks:
       - thesis
-  

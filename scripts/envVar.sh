@@ -29,11 +29,11 @@ setGlobals() {
       if [ "$PEER_TYPE" == "anchor" ]; then
         export CORE_PEER_TLS_ROOTCERT_FILE=${THESIS_NETWORK_HOME}/orgCrypto/peerOrganizations/client.example.com/peers/${PEER_TYPE}.client.example.com/tls/ca.crt
         export CORE_PEER_ADDRESS=localhost:7000
-        export FABRIC_CFG_PATH=${PWD}/compose/docker/peercfg/client.example.com/anchor.client.example.com
+        export FABRIC_CFG_PATH=${PWD}/docker/peercfg/client.example.com/anchor.client.example.com
       else
         export CORE_PEER_TLS_ROOTCERT_FILE=${THESIS_NETWORK_HOME}/orgCrypto/peerOrganizations/client.example.com/peers/${PEER_TYPE}.client.example.com/tls/ca.crt
         export CORE_PEER_ADDRESS=localhost:7010
-        export FABRIC_CFG_PATH=${PWD}/compose/docker/peercfg/client.example.com/backup.client.example.com
+        export FABRIC_CFG_PATH=${PWD}/docker/peercfg/client.example.com/backup.client.example.com
       fi
       ;;
     2)
@@ -43,11 +43,11 @@ setGlobals() {
       if [ "$PEER_TYPE" == "anchor" ]; then
         export CORE_PEER_TLS_ROOTCERT_FILE=${THESIS_NETWORK_HOME}/orgCrypto/peerOrganizations/lawfirm.example.com/peers/${PEER_TYPE}.lawfirm.example.com/tls/ca.crt
         export CORE_PEER_ADDRESS=localhost:8000
-        export FABRIC_CFG_PATH=${PWD}/compose/docker/peercfg/lawfirm.example.com/anchor.lawfirm.example.com
+        export FABRIC_CFG_PATH=${PWD}/docker/peercfg/lawfirm.example.com/anchor.lawfirm.example.com
       else
         export CORE_PEER_TLS_ROOTCERT_FILE=${THESIS_NETWORK_HOME}/orgCrypto/peerOrganizations/lawfirm.example.com/peers/${PEER_TYPE}.lawfirm.example.com/tls/ca.crt
         export CORE_PEER_ADDRESS=localhost:8010
-        export FABRIC_CFG_PATH=${PWD}/compose/docker/peercfg/lawfirm.example.com/backup.lawfirm.example.com
+        export FABRIC_CFG_PATH=${PWD}/docker/peercfg/lawfirm.example.com/backup.lawfirm.example.com
       fi
       ;;
     3)
@@ -57,11 +57,11 @@ setGlobals() {
       if [ "$PEER_TYPE" == "anchor" ]; then
         export CORE_PEER_TLS_ROOTCERT_FILE=${THESIS_NETWORK_HOME}/orgCrypto/peerOrganizations/retail.example.com/peers/${PEER_TYPE}.retail.example.com/tls/ca.crt
         export CORE_PEER_ADDRESS=localhost:9000
-        export FABRIC_CFG_PATH=${PWD}/compose/docker/peercfg/retail.example.com/anchor.retail.example.com
+        export FABRIC_CFG_PATH=${PWD}/docker/peercfg/retail.example.com/anchor.retail.example.com
       else
         export CORE_PEER_TLS_ROOTCERT_FILE=${THESIS_NETWORK_HOME}/orgCrypto/peerOrganizations/retail.example.com/peers/${PEER_TYPE}.retail.example.com/tls/ca.crt
         export CORE_PEER_ADDRESS=localhost:9010
-        export FABRIC_CFG_PATH=${PWD}/compose/docker/peercfg/retail.example.com/backup.retail.example.com
+        export FABRIC_CFG_PATH=${PWD}/docker/peercfg/retail.example.com/backup.retail.example.com
       fi
       ;;
     *)  errorln "ORG Unknown"
