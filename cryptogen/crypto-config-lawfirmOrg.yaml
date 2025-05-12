@@ -6,7 +6,7 @@
 # "PeerOrgs" - Definition of organizations managing peer nodes
 # ---------------------------------------------------------------------------
 PeerOrgs:
-  - Name: lawfirmOrg
+  - Name: LawFirmOrg
     Domain: lawfirm.example.com
     EnableNodeOUs: true
     Specs:

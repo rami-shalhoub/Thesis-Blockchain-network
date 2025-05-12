@@ -3,3 +3,5 @@ orgCrypto
 *.txt
 channel-artifacts
 .VSCodeCounter
+*.tar.gz
+*.zip

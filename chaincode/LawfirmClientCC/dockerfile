@@ -1,0 +1,21 @@
+
+
+FROM golang:1.24 AS builder
+
+WORKDIR /go/src/lawfirmclientcc
+COPY lawfirmclientcc.go .
+COPY go.mod .
+
+RUN go get github.com/hyperledger/fabric-chaincode-go/shim && \
+   CGO_ENABLED=0 GOOS=linux go build -v -o lawfirmclientcc_service
+
+FROM alpine:3.21
+WORKDIR /app
+RUN apk add --no-cache --update bash
+COPY --from=builder /go/src/lawfirmclientcc/lawfirmclientcc_service .
+
+ENV CHAINCODE_CCID=lawfirmclientcc:latest
+ENV CHAINCODE_ADDRESS=0.0.0.0:9998
+
+EXPOSE 9998
+CMD ["./lawfirmclientcc_service"]

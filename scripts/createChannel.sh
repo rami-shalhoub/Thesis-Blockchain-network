@@ -60,9 +60,11 @@ joinChannel() {
     cat log.txt
     verifyResult $res "Anchor Peer failed to join channel '$CHANNEL_NAME'"
 
-	#* Add the anchor peer
+	#* Add the backup peer
 	setGlobals $ORG backup
 	infoln "Joining the backup peer to $CHANNEL_NAME.. "
+	rc=1
+	COUNTER=1
 	while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ] ; do
 		sleep $DELAY
 		set -x

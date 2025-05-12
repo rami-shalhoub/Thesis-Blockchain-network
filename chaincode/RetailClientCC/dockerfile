@@ -1,0 +1,19 @@
+FROM golang:1.24 AS builder
+
+WORKDIR /go/src/retailclientcc
+COPY retailclientcc.go .
+COPY go.mod .
+
+RUN go get github.com/hyperledger/fabric-chaincode-go/shim && \
+   CGO_ENABLED=0 GOOS=linux go build -v -o retailclientcc_service
+
+FROM alpine:3.21
+WORKDIR /app
+RUN apk add --no-cache --update bash
+COPY --from=builder /go/src/retailclientcc/retailclientcc_service .
+
+ENV CHAINCODE_CCID=retailclientcc:latest
+ENV CHAINCODE_ADDRESS=0.0.0.0:9999
+
+EXPOSE 9999
+CMD ["./retailclientcc_service"]
