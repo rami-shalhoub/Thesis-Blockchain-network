@@ -44,15 +44,15 @@ NONWORKING_VERSIONS="^1\.0\. ^1\.1\. ^1\.2\. ^1\.3\. ^1\.4\."
 # Doing some basic sanity checking to make sure that the appropriate versions of fabric binaries/images are available.
 function checkPrereqs() {
    ## Check if your have cloned the peer binaries and configuration files.
-   # peer version > /dev/null 2>&1
+   peer version > /dev/null 2>&1
 
-   # if [[ $? -ne 0 || ! -d "../config" ]]; then
-   #     errorln "Peer binary and configuration files not found.."
-   #     errorln
-   #     errorln "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
-   #     errorln "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
-   #     exit 1
-   # fi
+   if [[ $? -ne 0 || ! -d "./bin" ]]; then
+       errorln "Peer binary and configuration files not found.."
+       errorln
+       errorln "Follow the instructions in the Fabric docs to install the Fabric Binaries:"
+       errorln "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
+       exit 1
+   fi
    # use the fabric peer container to see if the samples and binaries match your docker images
    LOCAL_VERSION=$(peer version | sed -ne 's/^ Version: //p')
    DOCKER_IMAGE_VERSION=$(${CONTAINER_CLI} run --rm hyperledger/fabric-peer:latest peer version | sed -ne 's/^ Version: //p')
@@ -204,91 +204,25 @@ function networkDown() {
 SOCK="${DOCKER_HOST:-/var/run/docker.sock}"
 DOCKER_SOCK="${SOCK##unix://}"
 
-## Parse mode
-if [[ $# -lt 1 ]]; then
+## Print help message
+if [ $# -lt 1 ]; then
    printHelp
    exit 0
 else
-   MODE=$1
-   shift
-fi
-## if no parameters are passed, show the help for cc
-if [ "$MODE" == "cc" ] && [[ $# -lt 1 ]]; then
-   printHelp $MODE
-   exit 0
-fi
+   MODE=${1}
 
-# parse subcommands if used
-if [[ $# -ge 1 ]]; then
-   key="$1"
-   # check for the createChannel subcommand
-   if [[ "$key" == "createChannel" ]]; then
-      export MODE="createChannel"
-      shift
-   # check for the cc command
-   elif [[ "$MODE" == "cc" ]]; then
-      if [ "$1" != "-h" ]; then
-         export SUBCOMMAND=$key
-         shift
-      fi
-   fi
-fi
-
-while [[ $# -ge 1 ]]; do
-   key="$1"
-   case $key in
-   -h)
-      printHelp $MODE
-      exit 0
-      ;;
-   -verbose)
-      VERBOSE=true
-      ;;
-   -r)
-      MAX_RETRY="$2"
-      shift
-      ;;
-   *)
-      errorln "Unknown flag: $key"
+   if [ "$MODE" == "up" ]; then
+      infoln "Starting nodes with CLI timeout of '${MAX_RETRY}' tries and CLI delay of '${CLI_DELAY}' seconds and using database '${DATABASE}' ${CRYPTO_MODE}"
+      networkUp
+   elif [ "$MODE" == "down" ]; then
+      infoln "Stopping network"
+      networkDown
+   elif [ "$MODE" == "restart" ]; then
+      infoln "Restarting network"
+      networkDown
+      networkUp
+   else
       printHelp
       exit 1
-      ;;
-   esac
-   shift
-done
-
-# Determine mode of operation and printing out what we asked for
-if [ "$MODE" == "prereq" ]; then
-   infoln "Installing binaries and fabric images. Fabric Version: ${IMAGETAG}  Fabric CA Version: ${CA_IMAGETAG}"
-   installPrereqs
-elif [ "$MODE" == "cOrg" ]; then
-   infoln "create organisations crypto"
-   createOrgs
-elif [ "$MODE" == "up" ]; then
-   infoln "Starting nodes with CLI timeout of '${MAX_RETRY}' tries and CLI delay of '${CLI_DELAY}' seconds and using database '${DATABASE}' ${CRYPTO_MODE}"
-   networkUp
-elif [ "$MODE" == "down" ]; then
-   infoln "Stopping network"
-   networkDown
-elif [ "$MODE" == "restart" ]; then
-   infoln "Restarting network"
-   networkDown
-   networkUp
-elif [ "$MODE" == "deployCC" ]; then
-   infoln "deploying chaincode on channel '${CHANNEL_NAME}'"
-   deployCC
-elif [ "$MODE" == "deployCCAAS" ]; then
-   infoln "deploying chaincode-as-a-service on channel '${CHANNEL_NAME}'"
-   deployCCAAS
-elif [ "$MODE" == "cc" ] && [ "$SUBCOMMAND" == "package" ]; then
-   packageChaincode
-elif [ "$MODE" == "cc" ] && [ "$SUBCOMMAND" == "list" ]; then
-   listChaincode
-elif [ "$MODE" == "cc" ] && [ "$SUBCOMMAND" == "invoke" ]; then
-   invokeChaincode
-elif [ "$MODE" == "cc" ] && [ "$SUBCOMMAND" == "query" ]; then
-   queryChaincode
-else
-   printHelp
-   exit 1
+   fi
 fi
