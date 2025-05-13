@@ -63,3 +63,6 @@ this is the blockchain network for my thesis application designed and inspired b
 > ```sh
 > ./network.sh
 > ```
+
+> [!IMPORTANT]
+> The chaincode is not fully developed and tested
