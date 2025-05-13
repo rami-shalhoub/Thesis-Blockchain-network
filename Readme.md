@@ -1,10 +1,21 @@
-# Readme
 ## Introduction
 
-this is the blockchain network for my thesis application designed and inspired by Hyperledger Fabric [test-network](https://github.com/hyperledger/fabric-samples/tree/main/test-network)
+this is the blockchain network for my thesis application designed and inspired by Hyperledger Fabric [test-network](https://github.com/hyperledger/fabric-samples/tree/main/test-network), the network is used for secure sharing documents between parties
+
+- [x] create the crypto material for each organisation
+- [x] create organisations contains
+- [x] create channels
+- [x] join the organisations to the channel
+- [x] set an anchor peer for each organisation in the channel
+- [x] deploy the chaincode as a service
+- [ ] test the chaincode
+- [ ] establish a gateway with the backend
 
 > [!CAUTION]
-> pleas check the [requirement](https://hyperledger-fabric.readthedocs.io/en/latest/prereqs.html) before setting up the network
+> please check the [requirement](https://hyperledger-fabric.readthedocs.io/en/latest/prereqs.html) before setting up the network
+
+> [!WARNING]
+> This network requires a Unix like system (Linux, Mac) to run, Windows users can use WSL 
 
 * * *
 
